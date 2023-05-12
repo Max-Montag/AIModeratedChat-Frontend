@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Message from "./Message";
+import axios, { AxiosResponse } from "axios";
+import Message, { MessageData } from "./Message";
 
 interface ChatRoomProps {
   chatRoomId: string;
 }
 
 function ChatRoom({ chatRoomId }: ChatRoomProps) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<MessageData[]>([]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
     axios
-      .get(`/api/chatrooms/${chatRoomId}/messages`)
+      .get(
+        `${process.env.REACT_APP_API_BASE_URL}api/chatrooms/${chatRoomId}/messages`
+      )
       .then((response) => {
         setMessages(response.data);
       })
@@ -24,22 +26,19 @@ function ChatRoom({ chatRoomId }: ChatRoomProps) {
       });
   }, [chatRoomId]);
 
-  /** 
   const handleSendMessage = () => {
     axios
       .post(`/api/chatrooms/${chatRoomId}/messages`, { text: newMessage })
-      .then((response) => {
+      .then((response: AxiosResponse<MessageData>) => {
         setMessages((prevMessages) => [...prevMessages, response.data]);
         setNewMessage("");
       })
       .catch((error) => {
         console.error("Es gab einen Fehler beim Senden der Nachricht", error);
       });
-  }; 
+  };
 
-  */
-
-  /** 
+  return (
     <div>
       {messages.map((message) => (
         <Message key={message.id} message={message} />
@@ -49,13 +48,6 @@ function ChatRoom({ chatRoomId }: ChatRoomProps) {
         onChange={(e) => setNewMessage(e.target.value)}
       />
       <button onClick={handleSendMessage}>Senden</button>
-    </div>
-
-    */
-
-  return (
-    <div>
-      <h1>Chat Room</h1>
     </div>
   );
 }

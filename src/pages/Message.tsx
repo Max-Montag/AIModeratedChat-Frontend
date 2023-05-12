@@ -1,13 +1,14 @@
-import React from "react";
+export interface MessageData {
+  id: string;
+  author: {
+    username: string;
+  };
+  content: string;
+  timestamp: string;
+}
 
 interface MessageProps {
-  message: {
-    author: {
-      username: string;
-    };
-    content: string;
-    timestamp: string;
-  };
+  message: MessageData;
 }
 
 function Message({ message }: MessageProps) {
