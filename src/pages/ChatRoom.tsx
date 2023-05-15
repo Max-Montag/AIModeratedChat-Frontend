@@ -38,17 +38,28 @@ function ChatRoom({ chatRoomId }: ChatRoomProps) {
       });
   };
 
+  const createChatRoom = () => {
+    axios.post(`/api/chatrooms/create`, { chatRoomId: 3 }).catch((error) => {
+      console.error("Es gab einen Fehler beim Erstellen des Raums", error);
+    });
+  };
+
   return (
-    <div>
-      {messages.map((message) => (
-        <Message key={message.id} message={message} />
-      ))}
-      <input
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-      />
-      <button onClick={handleSendMessage}>Senden</button>
-    </div>
+    <>
+      <div>
+        <button onClick={createChatRoom}>Neuen ChatRoom erstellen</button>
+      </div>
+      <div>
+        {messages.map((message) => (
+          <Message key={message.id} message={message} />
+        ))}
+        <input
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+        />
+        <button onClick={handleSendMessage}>Senden</button>
+      </div>
+    </>
   );
 }
 

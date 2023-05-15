@@ -1,10 +1,7 @@
 export interface MessageData {
   id: string;
-  author: {
-    username: string;
-  };
-  content: string;
-  timestamp: string;
+  chatroom: string;
+  text: string;
 }
 
 interface MessageProps {
@@ -14,9 +11,9 @@ interface MessageProps {
 function Message({ message }: MessageProps) {
   return (
     <div>
-      <h5>{message.author.username}</h5>
-      <p>{message.content}</p>
-      <small>{new Date(message.timestamp).toLocaleString()}</small>
+      <h5>{"userName"}</h5>
+      <p>{message.text}</p>
+      {/**<small>{new Date(message.timestamp).toLocaleString()}</small>*/}
     </div>
   );
 }
