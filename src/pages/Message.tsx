@@ -1,7 +1,9 @@
 export interface MessageData {
-  id: string;
-  chatroom: string;
+  id: number;
   text: string;
+  chatroom: string;
+  author: string;
+  timestamp: string;
 }
 
 interface MessageProps {
@@ -10,10 +12,14 @@ interface MessageProps {
 
 function Message({ message }: MessageProps) {
   return (
-    <div>
-      <h5>{"userName"}</h5>
-      <p>{message.text}</p>
-      {/**<small>{new Date(message.timestamp).toLocaleString()}</small>*/}
+    <div className="flex flex-col items-start max-w-sm mx-3 my-2 p-2 rounded-lg bg-green-100">
+      <div className="w-full flex justify-between">
+        <div className="font-semibold text-green-600">{message.author}</div>
+        <div className="text-sm text-gray-600">
+          {new Date(message.timestamp).toLocaleString()}
+        </div>
+      </div>
+      <div className="mt-2 text-gray-800">{message.text}</div>
     </div>
   );
 }
