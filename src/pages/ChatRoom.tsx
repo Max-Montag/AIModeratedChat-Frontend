@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Message, { MessageData } from "./Message";
 import { PaperAirplaneIcon } from "@heroicons/react/outline";
@@ -10,6 +10,16 @@ interface ChatRoomProps {
 function ChatRoom(props: ChatRoomProps) {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [messageText, setMessageText] = useState("");
+
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     axios
@@ -58,6 +68,7 @@ function ChatRoom(props: ChatRoomProps) {
         {messages.map((message) => (
           <Message key={message.id} message={message} />
         ))}
+        <div ref={messagesEndRef} />
       </div>
       <div className="flex items-center bg-gray-700 px-2 py-2 rounded-md mb-4">
         <input
