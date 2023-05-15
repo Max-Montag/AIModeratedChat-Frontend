@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Message, { MessageData } from "./Message";
+import { PaperAirplaneIcon } from "@heroicons/react/outline";
 
 interface ChatRoomProps {
   chatRoomId: string;
@@ -33,6 +34,18 @@ function ChatRoom(props: ChatRoomProps) {
           timestamp: new Date().toISOString(),
         }
       );
+
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          id: Date.now(), // TODO replace with real id
+          chatroom: props.chatRoomId,
+          text: messageText,
+          timestamp: new Date().toISOString(),
+          author: "me", // TODO get from auth
+        },
+      ]);
+
       setMessageText("");
     } catch (error) {
       console.error("Failed to send message: ", error);
@@ -41,23 +54,24 @@ function ChatRoom(props: ChatRoomProps) {
 
   return (
     <div className="h-screen flex flex-col justify-between">
-      <div className="overflow-y-auto">
+      <div className="overflow-y-auto mt-5 mb-2">
         {messages.map((message) => (
           <Message key={message.id} message={message} />
         ))}
       </div>
-      <div className="flex items-center bg-gray-800 rounded-md py-3 px-4 mb-4">
+      <div className="flex items-center bg-gray-700 px-2 py-2 rounded-md mb-4">
         <input
-          className="flex-grow rounded px-3 py-2 mr-4 text-gray-600"
+          className="flex-grow bg-gray-700 rounded px-3 py-2 mr-4 text-gray-100"
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
-        <button
-          className="py-2 px-4 rounded-lg bg-blue-700 text-white"
+        <div
           onClick={handleSendMessage}
+          className="cursor-pointer transform rotate-45 mx-2"
         >
-          send
-        </button>
+          <PaperAirplaneIcon className="h-6 w-6 text-white" />
+        </div>
       </div>
     </div>
   );
