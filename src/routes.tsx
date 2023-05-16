@@ -5,7 +5,6 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import NotLoggedIn from "./pages/auth/NotLoggedIn";
 import ChatRoom from "./pages/chat/ChatRoom";
-import AddFriend from "./pages/friends/AddFriend";
 import MyFriends from "./pages/friends/MyFriends";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
@@ -16,7 +15,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   return currentUser ? <>{children}</> : <Navigate to="/notloggedin" />;
 };
 
-const AppRoutes = () => {
+function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
@@ -49,6 +48,6 @@ const AppRoutes = () => {
       />
     </Routes>
   );
-};
+}
 
 export default AppRoutes;

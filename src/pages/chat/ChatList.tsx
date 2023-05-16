@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ChatListElement, { ChatListElementData } from "./ChatListElement";
+import { useAuth } from "../../contexts/AuthContext";
 
 const ChatList = () => {
   const [chats, setChats] = useState<ChatListElementData[]>([]);
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const accessToken = localStorage.getItem("access");
 
   useEffect(() => {
@@ -16,7 +18,6 @@ const ChatList = () => {
       );
       setChats(response.data);
     };
-
     fetchChats();
   }, []);
 
@@ -36,9 +37,20 @@ const ChatList = () => {
   return (
     <div className="text-center">
       <div className="mt-8">
-        {chats.map((chat: ChatListElementData) => (
-          <ChatListElement key={chat.id} chat={chat} />
-        ))}
+        {chats.map((chat: ChatListElementData) => {
+          const chatPartner =
+            chat.participant1.username !== currentUser
+              ? chat.participant1
+              : chat.participant2;
+
+          return (
+            <ChatListElement
+              key={chat.id}
+              chat={chat}
+              chatPartner={chatPartner}
+            />
+          );
+        })}
       </div>
       <div
         className="p-4 m-2 bg-gray-500 rounded shadow cursor-pointer hover:bg-gray-400"

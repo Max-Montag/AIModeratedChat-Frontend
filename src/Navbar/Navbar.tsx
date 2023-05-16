@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { MenuIcon, UserCircleIcon, XIcon } from "@heroicons/react/solid";
 
-const Navbar: React.FC = () => {
+function Navbar() {
   const { currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
             className="text-white mb-2 cursor-pointer"
             onClick={navigateToChatrooms}
           >
-            My Chatrooms
+            My Chats
           </p>
           <p
             className="text-white mb-2 cursor-pointer"
@@ -62,6 +62,6 @@ const Navbar: React.FC = () => {
       </div>
     </nav>
   );
-};
+}
 
 export default Navbar;

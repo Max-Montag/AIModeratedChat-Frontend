@@ -5,7 +5,7 @@ import Navbar from "./navbar/Navbar";
 
 function App() {
   return (
-    <div className="bg-gray-800">
+    <div className="bg-gray-100">
       <Router>
         <Navbar />
         <div className="pt-20 h-screen text-gray-200">

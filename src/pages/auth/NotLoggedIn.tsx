@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const NotLoggedIn = () => {
+function NotLoggedIn() {
   return (
     <div className="flex flex-col items-center justify-center mt-32">
       <h1 className="text-3xl font-bold mb-4">Log in or create an account</h1>
@@ -21,6 +21,6 @@ const NotLoggedIn = () => {
       </div>
     </div>
   );
-};
+}
 
 export default NotLoggedIn;

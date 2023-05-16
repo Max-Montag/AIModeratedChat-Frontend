@@ -1,20 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { userData } from "../../pages/friends/MyFriends";
 
 export interface ChatListElementData {
   id: string;
-  name: string;
+  participant1: userData;
+  participant2: userData;
 }
 
 interface ChatListElementProps {
   chat: ChatListElementData;
+  chatPartner: userData;
 }
 
-const ChatListElement = ({ chat }: ChatListElementProps) => {
+function ChatListElement(props: ChatListElementProps) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/chatroom/${chat.id}`);
+    navigate(`/chatroom/${props.chat.id}`);
   };
 
   return (
@@ -22,9 +25,9 @@ const ChatListElement = ({ chat }: ChatListElementProps) => {
       className="p-4 m-2 bg-gray-500 rounded shadow cursor-pointer hover:bg-gray-400"
       onClick={handleClick}
     >
-      <p className="text-md">{chat.name}</p>
+      <p className="text-md">{props.chatPartner.username}</p>
     </div>
   );
-};
+}
 
 export default ChatListElement;
