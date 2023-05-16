@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Message, { MessageData } from "./Message";
 import { PaperAirplaneIcon } from "@heroicons/react/outline";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useParams } from "react-router-dom";
 
 function ChatRoom() {

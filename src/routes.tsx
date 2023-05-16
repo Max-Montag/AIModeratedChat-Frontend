@@ -1,10 +1,12 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import ChatList from "./pages/ChatList";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import NotLoggedIn from "./pages/NotLoggedIn";
-import ChatRoom from "./pages/ChatRoom";
+import ChatList from "./pages/chat/ChatList";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import NotLoggedIn from "./pages/auth/NotLoggedIn";
+import ChatRoom from "./pages/chat/ChatRoom";
+import AddFriend from "./pages/friends/AddFriend";
+import MyFriends from "./pages/friends/MyFriends";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { currentUser } = useAuth();
@@ -19,6 +21,8 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/notloggedin" element={<NotLoggedIn />} />
+      <Route path="*" element={<Navigate to="/notloggedin" />} />
       <Route
         path="/chatlist"
         element={
@@ -35,8 +39,22 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
-      <Route path="/notloggedin" element={<NotLoggedIn />} />
-      <Route path="*" element={<Navigate to="/notloggedin" />} />
+      <Route
+        path="/myfriends"
+        element={
+          <PrivateRoute>
+            <MyFriends />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/addfriend"
+        element={
+          <PrivateRoute>
+            <AddFriend />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 };

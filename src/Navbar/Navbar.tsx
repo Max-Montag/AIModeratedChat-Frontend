@@ -17,6 +17,11 @@ const Navbar: React.FC = () => {
     toggleOpen();
   };
 
+  const navigateToMyFriends = () => {
+    navigate(`/myfriends`);
+    toggleOpen();
+  };
+
   return (
     <nav className="fixed z-10 flex items-center justify-between p-5 bg-gray-500 w-full">
       <button onClick={toggleOpen}>
@@ -33,6 +38,12 @@ const Navbar: React.FC = () => {
             onClick={navigateToChatrooms}
           >
             My Chatrooms
+          </p>
+          <p
+            className="text-white mb-2 cursor-pointer"
+            onClick={navigateToMyFriends}
+          >
+            My Friends
           </p>
           <button
             className="bg-gray-400 text-white px-4 py-1 rounded"
