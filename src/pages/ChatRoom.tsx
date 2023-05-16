@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Message, { MessageData } from "./Message";
 import { PaperAirplaneIcon } from "@heroicons/react/outline";
+import { useAuth } from "../contexts/AuthContext";
 
 interface ChatRoomProps {
   chatRoomId: string;
@@ -10,6 +11,8 @@ interface ChatRoomProps {
 function ChatRoom(props: ChatRoomProps) {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [messageText, setMessageText] = useState("");
+  const { currentUser } = useAuth();
+  const accessToken = localStorage.getItem("access");
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
@@ -35,6 +38,11 @@ function ChatRoom(props: ChatRoomProps) {
   }, [props.chatRoomId]);
 
   const handleSendMessage = async () => {
+    if (!currentUser) {
+      console.error("User not logged in!");
+      return;
+    }
+
     try {
       await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}api/chatrooms/${props.chatRoomId}/messages/`,
@@ -42,7 +50,8 @@ function ChatRoom(props: ChatRoomProps) {
           chatroom: props.chatRoomId,
           text: messageText,
           timestamp: new Date().toISOString(),
-        }
+        },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
       setMessages((currentMessages) => [
@@ -52,7 +61,7 @@ function ChatRoom(props: ChatRoomProps) {
           chatroom: props.chatRoomId,
           text: messageText,
           timestamp: new Date().toISOString(),
-          author: "me", // TODO get from auth
+          author: currentUser,
         },
       ]);
 
@@ -63,28 +72,31 @@ function ChatRoom(props: ChatRoomProps) {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-between">
-      <div className="overflow-y-auto mt-5 mb-2">
-        {messages.map((message) => (
-          <Message key={message.id} message={message} />
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-      <div className="flex items-center bg-gray-700 px-2 py-2 rounded-md mb-4">
-        <input
-          className="flex-grow bg-gray-700 rounded px-3 py-2 mr-4 text-gray-100"
-          value={messageText}
-          onChange={(e) => setMessageText(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-        />
-        <div
-          onClick={handleSendMessage}
-          className="cursor-pointer transform rotate-45 mx-2"
-        >
-          <PaperAirplaneIcon className="h-6 w-6 text-white" />
+    <>
+      <h1>{currentUser}</h1>
+      <div className="h-screen flex flex-col justify-between">
+        <div className="overflow-y-auto mt-5 mb-2 ">
+          {messages.map((message) => (
+            <Message key={message.id} message={message} />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+        <div className="flex items-center bg-gray-700 px-2 py-2 rounded-md mb-4">
+          <input
+            className="flex-grow bg-gray-700 rounded px-3 py-2 mr-4 text-gray-100"
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+          />
+          <div
+            onClick={handleSendMessage}
+            className="cursor-pointer transform rotate-45 mx-2"
+          >
+            <PaperAirplaneIcon className="h-6 w-6 text-white" />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
