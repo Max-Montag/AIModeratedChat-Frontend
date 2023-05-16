@@ -1,26 +1,17 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ChatRoom from "./pages/ChatRoom";
-import { AuthProvider } from "./contexts/AuthContext";
+import { BrowserRouter as Router } from "react-router-dom";
+import Routes from "./routes";
+import Navbar from "./Navbar/Navbar";
 
 function App() {
   return (
-    <div className="App">
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/chatroom/:chatRoomId"
-              element={<ChatRoom chatRoomId={"1"} />}
-            />
-            <Route path="/" element={<Login />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
+    <div className="bg-gray-800">
+      <Router>
+        <Navbar />
+        <div className="pt-20 h-screen text-gray-200">
+          <Routes />
+        </div>
+      </Router>
     </div>
   );
 }

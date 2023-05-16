@@ -4,11 +4,13 @@ import axios from "axios";
 type AuthContextType = {
   currentUser: string | null;
   login: (username: string, password: string) => Promise<void>;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   login: async () => {},
+  logout: () => {},
 });
 
 export const useAuth = () => {
@@ -37,9 +39,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    setCurrentUser(null);
+  };
+
   const contextValue: AuthContextType = {
     currentUser,
     login,
+    logout,
   };
 
   return (
