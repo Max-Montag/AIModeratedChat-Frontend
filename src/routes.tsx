@@ -28,10 +28,10 @@ const AppRoutes = () => {
         }
       />
       <Route
-        path="/chatroom/1"
+        path="/chatroom/:chatRoomId"
         element={
           <PrivateRoute>
-            <ChatRoom chatRoomId="1" />
+            <ChatRoom />
           </PrivateRoute>
         }
       />

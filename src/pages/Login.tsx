@@ -15,7 +15,6 @@ function Login() {
 
     try {
       await login(username, password);
-      alert("Login successful");
       navigate("/chatlist");
     } catch (error) {
       alert("Failed to login");

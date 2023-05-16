@@ -1,22 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { MenuIcon } from "@heroicons/react/solid";
+import { useNavigate } from "react-router-dom";
+import { MenuIcon, UserCircleIcon, XIcon } from "@heroicons/react/solid";
 
 const Navbar: React.FC = () => {
   const { currentUser, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const navigateToChatrooms = () => {
+    navigate(`/chatlist`);
+    toggleOpen();
+  };
 
   return (
     <nav className="fixed z-10 flex items-center justify-between p-5 bg-gray-500 w-full">
-      <div className="flex items-center">
-        <MenuIcon className="h-6 w-6 text-white" />
-        <span className="ml-2 text-white">{currentUser}</span>
-      </div>
-      <button
-        className="bg-gray-400 text-white px-4 py-1 rounded"
-        onClick={logout}
-      >
-        Logout
+      <button onClick={toggleOpen}>
+        {isOpen ? (
+          <XIcon className="h-6 w-6 text-white" />
+        ) : (
+          <MenuIcon className="h-6 w-6 text-white" />
+        )}
       </button>
+      {isOpen && (
+        <div className="absolute top-12 left-0 w-full bg-gray-500 p-5">
+          <p
+            className="text-white mb-2 cursor-pointer"
+            onClick={navigateToChatrooms}
+          >
+            My Chatrooms
+          </p>
+          <button
+            className="bg-gray-400 text-white px-4 py-1 rounded"
+            onClick={() => {
+              logout();
+              toggleOpen();
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      )}
+      <div className="flex items-center">
+        <span className="text-white">{currentUser}</span>
+        <UserCircleIcon className="h-6 w-6 text-white ml-2" />
+      </div>
     </nav>
   );
 };
