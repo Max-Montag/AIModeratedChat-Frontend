@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PlusIcon } from "@heroicons/react/solid";
 import axios from "axios";
+import { SearchIcon } from "@heroicons/react/outline";
 
 function AddFriend() {
   const [search, setSearch] = useState("");
@@ -33,21 +34,18 @@ function AddFriend() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center bg-gray-100">
       <div className="p-5 bg-white rounded shadow-lg w-96">
-        <form onSubmit={handleSearch}>
+        <form onSubmit={handleSearch} className="flex mb-4">
           <input
             type="text"
             placeholder="Search for a friend..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full p-2 mb-4 border rounded"
+            className="w-full p-2 border rounded"
           />
-          <button
-            type="submit"
-            className="w-full p-2 mb-4 bg-blue-500 text-white rounded"
-          >
-            Search
+          <button type="submit" className="p-2 bg-white rounded-l-none">
+            <SearchIcon className="h-5 w-5 text-gray-500" />
           </button>
         </form>
         {searchResults.map((user) =>

@@ -47,14 +47,6 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
-      <Route
-        path="/addfriend"
-        element={
-          <PrivateRoute>
-            <AddFriend />
-          </PrivateRoute>
-        }
-      />
     </Routes>
   );
 };

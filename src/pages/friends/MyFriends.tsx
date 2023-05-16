@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { PlusIcon } from "@heroicons/react/solid";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
+import AddFriend from "./AddFriend";
 
 interface FriendData {
   user1: string;
@@ -10,7 +10,7 @@ interface FriendData {
 
 function MyFriends() {
   const [friends, setFriends] = useState<FriendData[]>([]);
-  const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const accessToken = localStorage.getItem("access");
 
   useEffect(() => {
@@ -25,30 +25,26 @@ function MyFriends() {
     fetchFriends();
   }, []);
 
-  const handleAddFriend = () => {
-    navigate("/addfriend");
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center bg-gray-100 min-h-screen">
       <div className="p-5 bg-white rounded shadow-lg w-96">
-        <button
-          onClick={handleAddFriend}
-          className="w-full p-2 mb-4 bg-blue-500 text-white rounded flex justify-center items-center"
-        >
-          <PlusIcon className="h-5 w-5 mr-2" />
-          Add Friend
-        </button>
-        {friends.map((friend) => (
-          <div
-            key={friend.user1}
-            className="flex justify-between items-center p-2 mb-2 border rounded"
-          >
-            {friend.user1}
-            {friend.user2}
-          </div>
-        ))}
+        {friends.map((friend, index) => {
+          const friendUsername =
+            friend.user1 !== currentUser ? friend.user1 : friend.user2;
+
+          return (
+            <div
+              key={friendUsername}
+              className={
+                "flex justify-between items-center p-2 mb-2 border rounded"
+              }
+            >
+              {friendUsername}
+            </div>
+          );
+        })}
       </div>
+      <AddFriend />
     </div>
   );
 }
