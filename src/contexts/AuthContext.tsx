@@ -20,7 +20,9 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<string | null>(() =>
+    localStorage.getItem("currentuser")
+  );
 
   const login = async (username: string, password: string) => {
     try {
@@ -32,6 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // TODO: do not store tokens in local storage
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
+      localStorage.setItem("currentuser", username);
 
       setCurrentUser(username);
     } catch (error) {

@@ -73,7 +73,6 @@ function ChatRoom(props: ChatRoomProps) {
 
   return (
     <>
-      <h1>{currentUser}</h1>
       <div className="h-screen flex flex-col justify-between">
         <div className="overflow-y-auto mt-5 mb-2 ">
           {messages.map((message) => (

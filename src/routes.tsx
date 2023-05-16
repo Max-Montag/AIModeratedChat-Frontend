@@ -4,9 +4,12 @@ import ChatList from "./pages/ChatList";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotLoggedIn from "./pages/NotLoggedIn";
+import ChatRoom from "./pages/ChatRoom";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { currentUser } = useAuth();
+
+  console.log(currentUser);
 
   return currentUser ? <>{children}</> : <Navigate to="/notloggedin" />;
 };
@@ -21,6 +24,14 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <ChatList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/chatroom/1"
+        element={
+          <PrivateRoute>
+            <ChatRoom chatRoomId="1" />
           </PrivateRoute>
         }
       />
