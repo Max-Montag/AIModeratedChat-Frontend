@@ -71,14 +71,18 @@ function ChatRoom() {
 
   return (
     <>
-      <div className="h-screen flex flex-col justify-between bg-gray-900">
-        <div className="overflow-y-auto items-center mt-5 mb-2 ">
+      <div className="flex flex-col items-center justify-center">
+        <div className="overflow-y-auto mt-5 mb-24 w-full max-w-xl flex flex-col items-start">
           {messages.map((message) => (
-            <Message key={message.id} message={message} />
+            <Message
+              key={message.id}
+              message={message}
+              ownMessage={message.author === currentUser}
+            />
           ))}
           <div ref={messagesEndRef} />
         </div>
-        <div className="flex items-center bg-gray-700 px-2 py-2 mx-6 rounded-md mb-4">
+        <div className="fixed bottom-4 left-0 right-0 flex items-center bg-gray-700 px-2 py-2 mx-6 rounded-md mb-4">
           <input
             className="flex-grow bg-gray-700 rounded px-3 py-2 mr-4 text-gray-100"
             value={messageText}

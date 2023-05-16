@@ -8,7 +8,7 @@ function App() {
     <div className="bg-gray-100">
       <Router>
         <Navbar />
-        <div className="pt-20 h-screen text-gray-200">
+        <div className="pt-20 text-gray-200">
           <Routes />
         </div>
       </Router>

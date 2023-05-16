@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ChatListElement, { ChatListElementData } from "./ChatListElement";
 import { useAuth } from "../../contexts/AuthContext";
 
-const ChatList = () => {
+function ChatList() {
   const [chats, setChats] = useState<ChatListElementData[]>([]);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
@@ -22,21 +22,12 @@ const ChatList = () => {
   }, []);
 
   const createNewChat = async () => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}api/chatrooms/create/`,
-        {},
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      navigate(`/chatroom/${response.data.id}`);
-    } catch (error) {
-      console.error(error);
-    }
+    navigate(`/myfriends`);
   };
 
   return (
     <div className="text-center">
-      <div className="mt-8">
+      <div>
         {chats.map((chat: ChatListElementData) => {
           const chatPartner =
             chat.participant1.username !== currentUser
@@ -60,6 +51,6 @@ const ChatList = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ChatList;

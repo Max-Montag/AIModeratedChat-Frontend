@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface MessageData {
   id: number;
   text: string;
@@ -8,11 +10,17 @@ export interface MessageData {
 
 interface MessageProps {
   message: MessageData;
+  ownMessage: boolean;
 }
 
 function Message(props: MessageProps) {
+  const messageAlignment = props.ownMessage ? "self-end" : "self-start";
+  const messageColor = props.ownMessage ? "bg-green-200" : "bg-blue-300";
+
   return (
-    <div className="flex flex-col items-start max-w-sm mx-3 my-2 p-2 rounded-lg bg-green-100">
+    <div
+      className={`flex flex-col ${messageAlignment} max-w-[80%] break-words mx-3 my-2 p-2 rounded-lg ${messageColor}`}
+    >
       <div className="w-full flex justify-between">
         <div className="font-semibold text-sm text-gray-700">
           {props.message.author}

@@ -46,7 +46,7 @@ function MyFriends() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-100 min-h-screen">
+    <div className="flex flex-col text-gray-500 items-center justify-center">
       <div className="p-5 bg-white rounded shadow-lg w-96">
         {friends.map((friend, index) => {
           const friendData =

@@ -34,7 +34,7 @@ function AddFriend() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-100">
+    <div className="flex flex-col items-center justify-center">
       <div className="p-5 bg-white rounded shadow-lg w-96">
         <form onSubmit={handleSearch} className="flex mb-4">
           <input
