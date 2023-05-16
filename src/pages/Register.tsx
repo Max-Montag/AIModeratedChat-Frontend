@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
@@ -24,25 +24,39 @@ function Register() {
   };
 
   return (
-    <form onSubmit={register}>
-      <h2>Register</h2>
-      {error && <p>{error}</p>}
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <button type="submit">Register</button>
-    </form>
+    <div className="flex flex-col items-center justify-center">
+      <form
+        onSubmit={register}
+        className="bg-gray-500 p-8 rounded shadow-md space-y-4 mt-32"
+      >
+        <h2 className="text-2xl font-bold">Register</h2>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          className="w-full bg-gray-800 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full bg-gray-800 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+        >
+          Register
+        </button>
+        <p>
+          Do you have an account? <Link to="/login">Log in</Link>
+        </p>
+      </form>
+    </div>
   );
 }
 
