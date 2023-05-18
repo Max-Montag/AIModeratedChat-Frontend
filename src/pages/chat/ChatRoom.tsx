@@ -55,7 +55,7 @@ function ChatRoom() {
       setMessages((currentMessages) => [
         ...currentMessages,
         {
-          id: Date.now(), // TODO replace with real id
+          id: Date.now(),
           chatroom: chatRoomId || "",
           text: messageText,
           timestamp: new Date().toISOString(),

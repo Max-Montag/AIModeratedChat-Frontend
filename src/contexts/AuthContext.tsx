@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type AuthContextType = {
   currentUser: string | null;
@@ -20,9 +21,22 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<string | null>(() =>
     localStorage.getItem("currentuser")
   );
+
+  const setupAxiosInterceptors = (onUnauthenticated: () => void) => {
+    axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          onUnauthenticated();
+        }
+        return Promise.reject(error);
+      }
+    );
+  };
 
   const login = async (username: string, password: string) => {
     try {
@@ -37,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("currentuser", username);
 
       setCurrentUser(username);
+      setupAxiosInterceptors(logout);
     } catch (error) {
       throw error;
     }
@@ -46,6 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     setCurrentUser(null);
+    navigate("/login");
   };
 
   const contextValue: AuthContextType = {

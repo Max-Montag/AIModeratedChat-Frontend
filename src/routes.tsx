@@ -3,16 +3,13 @@ import { useAuth } from "./contexts/AuthContext";
 import ChatList from "./pages/chat/ChatList";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import NotLoggedIn from "./pages/auth/NotLoggedIn";
 import ChatRoom from "./pages/chat/ChatRoom";
 import MyFriends from "./pages/friends/MyFriends";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { currentUser } = useAuth();
 
-  console.log(currentUser);
-
-  return currentUser ? <>{children}</> : <Navigate to="/notloggedin" />;
+  return currentUser ? <>{children}</> : <Navigate to="/login" />;
 };
 
 function AppRoutes() {
@@ -20,8 +17,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/notloggedin" element={<NotLoggedIn />} />
-      <Route path="*" element={<Navigate to="/notloggedin" />} />
+      <Route path="*" element={<Navigate to="/login" />} />
       <Route
         path="/chatlist"
         element={
