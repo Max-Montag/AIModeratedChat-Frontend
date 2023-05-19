@@ -14,7 +14,7 @@ function Login() {
 
     try {
       await login(username, password);
-      navigate("/chatlist");
+      navigate("/home");
     } catch (error) {
       alert("Failed to login");
     }

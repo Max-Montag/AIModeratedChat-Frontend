@@ -1,13 +1,15 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import ChatList from "./pages/chat/ChatList";
-import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
+import Home from "./pages/Home";
 import ChatRoom from "./pages/chat/ChatRoom";
-import MyFriends from "./pages/friends/MyFriends";
+import ConnectPartner from "./pages/ConnectParnter";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { currentUser } = useAuth();
+
+  console.log(currentUser);
 
   return currentUser ? <>{children}</> : <Navigate to="/login" />;
 };
@@ -17,17 +19,16 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="*" element={<Navigate to="/login" />} />
       <Route
-        path="/chatlist"
+        path="/home"
         element={
           <PrivateRoute>
-            <ChatList />
+            <Home />
           </PrivateRoute>
         }
       />
       <Route
-        path="/chatroom/:chatRoomId"
+        path="/ourchat"
         element={
           <PrivateRoute>
             <ChatRoom />
@@ -35,13 +36,14 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/myfriends"
+        path="/connectPartner/:partnerId"
         element={
           <PrivateRoute>
-            <MyFriends />
+            <ConnectPartner />
           </PrivateRoute>
         }
       />
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 }

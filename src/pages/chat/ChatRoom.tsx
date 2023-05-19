@@ -24,9 +24,9 @@ function ChatRoom() {
 
   useEffect(() => {
     axios
-      .get(
-        `${process.env.REACT_APP_API_BASE_URL}api/chatrooms/${chatRoomId}/messages`
-      )
+      .get(`${process.env.REACT_APP_API_BASE_URL}api/ourChat/messages/`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then((response) => {
         setMessages(response.data);
       })
@@ -43,7 +43,7 @@ function ChatRoom() {
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}api/chatrooms/${chatRoomId}/messages/`,
+        `${process.env.REACT_APP_API_BASE_URL}api/ourChat/messages/`,
         {
           chatroom: chatRoomId,
           text: messageText,
@@ -59,7 +59,7 @@ function ChatRoom() {
           chatroom: chatRoomId || "",
           text: messageText,
           timestamp: new Date().toISOString(),
-          author: currentUser,
+          author: currentUser.username,
         },
       ]);
 
@@ -77,7 +77,7 @@ function ChatRoom() {
             <Message
               key={message.id}
               message={message}
-              ownMessage={message.author === currentUser}
+              ownMessage={message.author === currentUser?.username}
             />
           ))}
           <div ref={messagesEndRef} />

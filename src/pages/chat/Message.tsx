@@ -15,7 +15,11 @@ interface MessageProps {
 
 function Message(props: MessageProps) {
   const messageAlignment = props.ownMessage ? "self-end" : "self-start";
-  const messageColor = props.ownMessage ? "bg-green-200" : "bg-blue-300";
+  const messageColor = props.ownMessage
+    ? "bg-green-200"
+    : props.message.author === "Therapist"
+    ? "bg-amber-300"
+    : "bg-blue-300";
 
   return (
     <div

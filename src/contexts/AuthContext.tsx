@@ -2,8 +2,16 @@ import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+export interface userData {
+  id: number;
+  username: string;
+  userprofile: {
+    partner: string;
+  };
+}
+
 type AuthContextType = {
-  currentUser: string | null;
+  currentUser: userData | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 };
@@ -22,9 +30,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState<string | null>(() =>
-    localStorage.getItem("currentuser")
-  );
+  const [currentUser, setCurrentUser] = useState<userData | null>(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    return currentUser ? JSON.parse(currentUser) : null;
+  });
 
   const setupAxiosInterceptors = (onUnauthenticated: () => void) => {
     axios.interceptors.response.use(
@@ -45,12 +54,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         { username, password }
       );
 
-      // TODO: do not store tokens in local storage
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
-      localStorage.setItem("currentuser", username);
 
-      setCurrentUser(username);
+      const userDataResponse = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}api/user/`,
+        { headers: { Authorization: `Bearer ${response.data.access}` } }
+      );
+
+      localStorage.setItem("currentuser", userDataResponse.data);
+
+      setCurrentUser(userDataResponse.data);
       setupAxiosInterceptors(logout);
     } catch (error) {
       throw error;
