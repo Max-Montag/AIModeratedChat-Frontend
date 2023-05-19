@@ -4,7 +4,7 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import Home from "./pages/Home";
 import ChatRoom from "./pages/chat/ChatRoom";
-import ConnectPartner from "./pages/ConnectParnter";
+import ConnectPartner from "./pages/ConnectPartner";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { currentUser } = useAuth();
