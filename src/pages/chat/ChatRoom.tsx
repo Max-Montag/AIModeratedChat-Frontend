@@ -9,7 +9,6 @@ function ChatRoom() {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [messageText, setMessageText] = useState("");
   const { currentUser } = useAuth();
-  const accessToken = localStorage.getItem("access");
   let { chatRoomId } = useParams();
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
@@ -25,7 +24,7 @@ function ChatRoom() {
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}api/ourChat/messages/`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        withCredentials: true,
       })
       .then((response) => {
         setMessages(response.data);
@@ -49,7 +48,7 @@ function ChatRoom() {
           text: messageText,
           timestamp: new Date().toISOString(),
         },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
+        { withCredentials: true }
       );
 
       setMessages((currentMessages) => [

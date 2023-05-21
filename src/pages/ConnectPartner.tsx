@@ -5,7 +5,6 @@ import { useParams, useNavigate } from "react-router-dom";
 function ConnectPartner() {
   const { partnerId } = useParams<{ partnerId: string }>();
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("access");
 
   useEffect(() => {
     const connectPartner = async () => {
@@ -13,7 +12,7 @@ function ConnectPartner() {
         await axios.post(
           `${process.env.REACT_APP_API_BASE_URL}api/connectPartner/${partnerId}/`,
           {},
-          { headers: { Authorization: `Bearer ${accessToken}` } }
+          { withCredentials: true }
         );
         navigate("/home");
       } catch (error) {
@@ -21,7 +20,7 @@ function ConnectPartner() {
       }
     };
     connectPartner();
-  }, [partnerId, navigate, accessToken]);
+  }, [partnerId, navigate]);
 
   return (
     <div className="text-center">

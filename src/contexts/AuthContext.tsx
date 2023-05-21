@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+axios.defaults.withCredentials = true;
+
 export interface userData {
   id: number;
   username: string;
@@ -30,52 +32,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState<userData | null>(() => {
-    const currentUser = localStorage.getItem("currentUser");
-    return currentUser ? JSON.parse(currentUser) : null;
-  });
+  const [currentUser, setCurrentUser] = useState<userData | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  const setupAxiosInterceptors = (onUnauthenticated: () => void) => {
-    axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response && error.response.status === 401) {
-          onUnauthenticated();
-        }
-        return Promise.reject(error);
-      }
-    );
+  const setupAxiosInterceptors = (token: string) => {
+    axios.interceptors.request.use(function (config) {
+      config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    });
   };
 
   const login = async (username: string, password: string) => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}api/token/`,
-        { username, password }
+        { username, password },
+        { withCredentials: true }
       );
 
-      localStorage.setItem("access", response.data.access);
-      localStorage.setItem("refresh", response.data.refresh);
+      setToken(response.data.access);
+      setupAxiosInterceptors(response.data.access);
 
       const userDataResponse = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}api/user/`,
-        { headers: { Authorization: `Bearer ${response.data.access}` } }
+        { withCredentials: true }
       );
 
-      localStorage.setItem("currentuser", userDataResponse.data);
-
       setCurrentUser(userDataResponse.data);
-      setupAxiosInterceptors(logout);
     } catch (error) {
       throw error;
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    setCurrentUser(null);
-    navigate("/login");
+  const logout = async () => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}api/logout/`,
+        {},
+        { withCredentials: true }
+      );
+      setCurrentUser(null);
+      navigate("/login");
+    } catch (error) {
+      throw error;
+    }
   };
 
   const contextValue: AuthContextType = {
