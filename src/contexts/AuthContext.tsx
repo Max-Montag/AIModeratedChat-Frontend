@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +33,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<userData | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const authenticateUser = async () => {
+        try {
+          const cookie = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("access_token="));
+          const accessToken = cookie ? cookie.split("=")[1] : null;
+
+          if (accessToken) {
+            const userDataResponse = await axios.get(
+              `${process.env.REACT_APP_API_BASE_URL}api/user/`,
+              { headers: { Authorization: `Bearer ${accessToken}` } }
+            );
+            setCurrentUser(userDataResponse.data);
+          } else {
+            throw new Error("Access token not found");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+        setLoading(false);
+      };
+
+      authenticateUser();
+    }
+  }, []);
 
   const setupAxiosInterceptors = (token: string) => {
     axios.interceptors.request.use(function (config) {
@@ -50,7 +78,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         { withCredentials: true }
       );
 
-      setToken(response.data.access);
       setupAxiosInterceptors(response.data.access);
 
       const userDataResponse = await axios.get(
@@ -85,6 +112,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>
+      {!loading && children}
+    </AuthContext.Provider>
   );
 };
