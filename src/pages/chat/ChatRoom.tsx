@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import Message, { MessageData } from "./Message";
 import { PaperAirplaneIcon } from "@heroicons/react/outline";
-import { useAuth } from "../../contexts/AuthContext";
-import { useParams } from "react-router-dom";
+import { useAuth, createAuthenticatedClient } from "../../contexts/AuthContext";
 
 function ChatRoom() {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [messageText, setMessageText] = useState("");
   const { currentUser } = useAuth();
-  let { chatRoomId } = useParams();
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
@@ -22,17 +19,17 @@ function ChatRoom() {
   }, [messages]);
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}api/ourChat/messages/`, {
-        withCredentials: true,
-      })
-      .then((response) => {
+    const getMessages = async () => {
+      try {
+        const client = createAuthenticatedClient();
+        const response = await client.get(`api/ourChat/messages/`);
         setMessages(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Failed to receive messages for chatroom", error);
-      });
-  }, [chatRoomId]);
+      }
+    };
+    getMessages();
+  }, [createAuthenticatedClient]);
 
   const handleSendMessage = async () => {
     if (!currentUser) {
@@ -41,21 +38,17 @@ function ChatRoom() {
     }
 
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}api/ourChat/messages/`,
-        {
-          chatroom: chatRoomId,
-          text: messageText,
-          timestamp: new Date().toISOString(),
-        },
-        { withCredentials: true }
-      );
+      const client = createAuthenticatedClient();
+      await client.post(`api/ourChat/messages/`, {
+        text: messageText,
+        timestamp: new Date().toISOString(),
+      });
 
       setMessages((currentMessages) => [
         ...currentMessages,
         {
           id: Date.now(),
-          chatroom: chatRoomId || "",
+          chatroom: "",
           text: messageText,
           timestamp: new Date().toISOString(),
           author: currentUser.username,

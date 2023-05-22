@@ -9,8 +9,6 @@ import ConnectPartner from "./pages/ConnectPartner";
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { currentUser } = useAuth();
 
-  console.log(currentUser);
-
   return currentUser ? <>{children}</> : <Navigate to="/login" />;
 };
 
@@ -43,7 +41,7 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
-      <Route path="*" element={<Navigate to="/login" />} />
+      <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   );
 }

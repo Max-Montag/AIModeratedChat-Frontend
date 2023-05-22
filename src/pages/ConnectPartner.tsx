@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { createAuthenticatedClient } from "../contexts/AuthContext";
 
 function ConnectPartner() {
   const { partnerId } = useParams<{ partnerId: string }>();
@@ -9,11 +9,8 @@ function ConnectPartner() {
   useEffect(() => {
     const connectPartner = async () => {
       try {
-        await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}api/connectPartner/${partnerId}/`,
-          {},
-          { withCredentials: true }
-        );
+        const client = createAuthenticatedClient();
+        await client.post(`api/connectPartner/${partnerId}/`, {});
         navigate("/home");
       } catch (error) {
         console.error("Failed to connect with partner:", error);

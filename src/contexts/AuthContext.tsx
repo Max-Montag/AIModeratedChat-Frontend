@@ -2,8 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-axios.defaults.withCredentials = true;
-
 export interface userData {
   id: number;
   username: string;
@@ -28,6 +26,55 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
+export function createAuthenticatedClient() {
+  const cookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("access_token="));
+  const accessToken = cookie ? cookie.split("=")[1] : null;
+  if (!accessToken) {
+    throw new Error("Access token not found");
+  }
+
+  const client = axios.create({
+    baseURL: process.env.REACT_APP_API_BASE_URL,
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  client.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const access_token = await refreshAccessToken();
+        document.cookie = `access_token=${access_token}; path=/; samesite=lax`;
+        axios.defaults.headers.common["Authorization"] =
+          "Bearer " + access_token;
+        return client(originalRequest);
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  return client;
+}
+
+const refreshAccessToken = async () => {
+  const cookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("refresh_token="));
+  const refreshToken = cookie ? cookie.split("=")[1] : null;
+  if (!refreshToken) {
+    throw new Error("Refresh token not found");
+  }
+
+  const response = await axios.post(
+    `${process.env.REACT_APP_API_BASE_URL}api/token/refresh/`,
+    { refresh: refreshToken }
+  );
+  return response.data.access;
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -39,20 +86,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (typeof document !== "undefined") {
       const authenticateUser = async () => {
         try {
-          const cookie = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("access_token="));
-          const accessToken = cookie ? cookie.split("=")[1] : null;
-
-          if (accessToken) {
-            const userDataResponse = await axios.get(
-              `${process.env.REACT_APP_API_BASE_URL}api/user/`,
-              { headers: { Authorization: `Bearer ${accessToken}` } }
-            );
-            setCurrentUser(userDataResponse.data);
-          } else {
-            throw new Error("Access token not found");
-          }
+          const client = createAuthenticatedClient();
+          const userDataResponse = await client.get("api/user/");
+          setCurrentUser(userDataResponse.data);
         } catch (error) {
           console.error(error);
         }
@@ -63,13 +99,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
-  const setupAxiosInterceptors = (token: string) => {
-    axios.interceptors.request.use(function (config) {
-      config.headers.Authorization = `Bearer ${token}`;
-      return config;
-    });
-  };
-
   const login = async (username: string, password: string) => {
     try {
       const response = await axios.post(
@@ -78,12 +107,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         { withCredentials: true }
       );
 
-      setupAxiosInterceptors(response.data.access);
-
-      const userDataResponse = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}api/user/`,
-        { withCredentials: true }
-      );
+      const client = createAuthenticatedClient();
+      const userDataResponse = await client.get("api/user/");
 
       setCurrentUser(userDataResponse.data);
     } catch (error) {
@@ -93,11 +118,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}api/logout/`,
-        {},
-        { withCredentials: true }
-      );
+      const client = createAuthenticatedClient();
+      await client.post("api/logout/", {});
       setCurrentUser(null);
       navigate("/login");
     } catch (error) {
