@@ -46,11 +46,17 @@ function Home() {
                 {stats && (
                   <div>
                     <h2 className="mb-2 font-semibold">Your stats:</h2>
-                    <p>Total messages: {stats.total_messages}</p>
+                    <p>Your messages: {stats.total_messages}</p>
                     <p>Therapist messages: {stats.therapist_messages}</p>
                     <p>
                       Intervention rate:{" "}
-                      {(stats.therapist_messages / stats.total_messages) * 100}%
+                      {stats.total_messages !== 0
+                        ? (
+                            (stats.therapist_messages / stats.total_messages) *
+                            100
+                          ).toFixed(2)
+                        : 0}
+                      %
                     </p>
                   </div>
                 )}

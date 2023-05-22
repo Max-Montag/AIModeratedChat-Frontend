@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { createAuthenticatedClient } from "../contexts/AuthContext";
+import { RefreshIcon } from "@heroicons/react/outline";
 
 function ConnectPartner() {
   const { partnerId } = useParams<{ partnerId: string }>();
@@ -20,8 +21,8 @@ function ConnectPartner() {
   }, [partnerId, navigate]);
 
   return (
-    <div className="text-center text-gray-600">
-      <h2>Connecting with partner...</h2>
+    <div className="flex justify-center items-center min-h-screen">
+      <RefreshIcon className="h-24 w-24 text-gray-500 animate-spin" />
     </div>
   );
 }
