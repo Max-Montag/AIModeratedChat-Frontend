@@ -8,9 +8,7 @@ function App() {
     <div className="bg-gray-100">
       <Router>
         <AuthProvider>
-          <div className="pt-20 text-gray-200">
-            <Routes />
-          </div>
+          <Routes />
         </AuthProvider>
       </Router>
     </div>

@@ -14,7 +14,6 @@ interface MessageProps {
 }
 
 function Message(props: MessageProps) {
-  const messageAlignment = props.ownMessage ? "self-end" : "self-start";
   const messageColor = props.ownMessage
     ? "bg-green-200"
     : props.message.author === "Therapist"
@@ -23,7 +22,7 @@ function Message(props: MessageProps) {
 
   return (
     <div
-      className={`flex flex-col ${messageAlignment} min-w-[30%] max-w-[80%] break-words mx-3 my-2 p-2 rounded-lg ${messageColor}`}
+      className={`flex flex-col min-w-[30%] max-w-[80%] break-words mx-3 my-2 p-2 rounded-lg ${messageColor}`}
     >
       <div className="w-full  flex justify-between">
         <div className="font-semibold text-sm text-gray-700">
