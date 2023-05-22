@@ -20,7 +20,7 @@ function ConnectPartner() {
   }, [partnerId, navigate]);
 
   return (
-    <div className="text-center">
+    <div className="text-center text-gray-600">
       <h2>Connecting with partner...</h2>
     </div>
   );
