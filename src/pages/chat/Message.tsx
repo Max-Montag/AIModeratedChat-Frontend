@@ -23,14 +23,14 @@ function Message(props: MessageProps) {
 
   return (
     <div
-      className={`flex flex-col ${messageAlignment} max-w-[80%] break-words mx-3 my-2 p-2 rounded-lg ${messageColor}`}
+      className={`flex flex-col ${messageAlignment} min-w-[30%] max-w-[80%] break-words mx-3 my-2 p-2 rounded-lg ${messageColor}`}
     >
-      <div className="w-full flex justify-between">
+      <div className="w-full  flex justify-between">
         <div className="font-semibold text-sm text-gray-700">
           {props.message.author}
         </div>
         <div className="text-sm text-gray-500">
-          {new Date(props.message.timestamp).toLocaleString()}
+          {new Date(props.message.timestamp).toLocaleTimeString()}
         </div>
       </div>
       <div className="mt-2 text-[16px] text-gray-800">{props.message.text}</div>
