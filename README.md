@@ -1,7 +1,5 @@
 # AIModeratedChat - Frontend
 
-![App Screenshot](./assets/screenshots/screenshot.png)
-
 This repository contains the frontend code for the AIModeratedChat. This application is designed to facilitate communication between users by providing a chat platform monitored by an AI moderator. The AI, powered by OpenAI's GPT-3.5, intervenes when necessary to improve the conversation.
 
 ---
