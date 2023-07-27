@@ -26,7 +26,7 @@ Before you begin, ensure you have met the following requirements:
 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/AIModeratedChat-frontend.git
+git clone https://github.com/Max-Montag/AIModeratedChat-frontend.git
 ```
 
 2. Install NPM packages
